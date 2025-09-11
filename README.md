@@ -3,6 +3,9 @@
 
 - Created app using vite
 - Configered TailwindCSS 
+- Header
+- Login Form
+- Sign Up form
 
 # Features: 
 - Login/Sign Up
