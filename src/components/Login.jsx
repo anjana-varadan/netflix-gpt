@@ -1,11 +1,27 @@
 import Header from "./Header";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { checkValidData } from "../utils/validate.jsx";
 
 const Login = () => {
   const [isSignIn, setIsSignIn] = useState(true);
+  const name = useRef(null);
+  const email = useRef(null);
+  const password = useRef(null);
+  const [errMsg, setErrMsg] = useState(null);
 
   const handleSignUpForm = () => {
     setIsSignIn(!isSignIn);
+  };
+
+  const handleBtnClick = () => {
+    //validate form data
+    const msg = checkValidData(
+      isSignIn ? "signIn" : "signUp",
+      name.current?.value ?? "",
+      email.current.value,
+      password.current.value
+    );
+    setErrMsg(msg);
   };
   return (
     <div>
@@ -18,13 +34,17 @@ const Login = () => {
         />
       </div>
 
-      <form className="w-5/13 absolute p-14 my-25 mx-auto right-0 left-0 text-white bg-black/70">
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="w-5/13 absolute p-14 my-25 mx-auto right-0 left-0 text-white bg-black/70"
+      >
         <h1 className="font-bold text-3xl py-4 px-2">
           {isSignIn ? "Sign In" : "Sign Up"}
         </h1>
 
         {!isSignIn && (
           <input
+            ref={name}
             type="text"
             placeholder="Enter Full Name"
             className="p-4 m-2 w-full border-0 ring-[0.2px] ring-white rounded-sm"
@@ -32,19 +52,25 @@ const Login = () => {
         )}
 
         <input
+          ref={email}
           type="text"
-          placeholder="Email or mobile number"
+          placeholder="Email"
           className="p-4 m-2 w-full border-0 ring-[0.2px] ring-white rounded-sm"
         />
-        
+
         <input
+          ref={password}
           type="password"
           placeholder="Password"
           className="p-4 m-2 w-full border-0 ring-[0.2px] ring-white rounded-sm"
         />
-        <button className="bg-red-600 p-2 m-6 mx-2 rounded w-full">
+        <button
+          className="bg-red-600 p-2 m-6 mx-2 rounded w-full cursor-pointer"
+          onClick={handleBtnClick}
+        >
           {isSignIn ? "Sign In" : "Sign Up"}
         </button>
+        <p className="p-2 text-red-500">{errMsg}</p>
 
         <p
           className="text-gray-400 px-2 my-2 cursor-pointer"
