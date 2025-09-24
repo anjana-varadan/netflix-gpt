@@ -8,7 +8,6 @@ import {
 } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { checkValidData } from "../utils/validate.jsx";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice.jsx";
 
@@ -47,7 +46,6 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
 
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const name = useRef(null);
@@ -100,13 +98,11 @@ const Login = () => {
         const user = cred.user; // ✅ THIS is the user, not `auth`
         dispatch(addUser({ uid: user.uid, email: user.email, displayName: user.displayName }));
         setSuccessMsg("Account created successfully.");
-        navigate("/browse"); // ← remove if you don't want navigation
       } else {
         // Sign In
         const { user } = await signInWithEmailAndPassword(auth, emailVal, passVal);
         dispatch(addUser({ uid: user.uid, email: user.email, displayName: user.displayName }));
         setSuccessMsg("Signed in successfully.");
-        navigate("/browse"); // ← remove if you don't want navigation
       }
     } catch (error) {
       setErrMsg(prettyFirebaseError(error.code));

@@ -1,18 +1,37 @@
 // Header.jsx
-import { signOut } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { addUser, removeUser } from "../utils/userSlice";
 
 const Header = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigate();
   const user = useSelector((store) => store.user);
 
   const handleSignOut = () => {
     signOut(auth)
-      .then(() => navigation("/"))
+      .then(() =>{} )
       .catch(() => navigation("/error"));
   };
+
+    useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const { uid, email, displayName } = user;
+        dispatch(addUser({ uid, email, displayName }));
+        navigation("/browse");
+      } else {
+        dispatch(removeUser());
+        navigation("/");
+      }
+    });
+    
+    return unsub; // <-- cleanup
+  }, []);
+
 
   // show displayName if set; else fall back to email prefix
   const nameToShow =
