@@ -16,6 +16,7 @@
 - Created REDUX store with user Slice
 - Implemented Signout
 - Updated profile with user name
+- Fixed bug: redirect user if user not logged in redirect to login pae and vise versa
 - Fetch Movies from TMDB
 
 
